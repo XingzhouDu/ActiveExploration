@@ -1,40 +1,41 @@
 function [PosSwm, xyhv_co_mat, xyROI, hvROI, Branch, Img_total_arr, ReconsData, all_end, pix_inc, frame_ct_n, mf_dir, dist_hvroi] = ActiveExploration_function(imgroi2_top, img_grey_side, img_grey_side_ini, ...
     len_x,len_y, ROI_len,ROI_hei, xyROI_p, hvROI_p, xyhv_cpre_mat, Branch_p, PosSwm_p, Region, Img_total_arr_p, ReconsData_p, pix_inc_p, num_frame, frame_ct,mf_dir_p)
 
-% Copyright © 2023 DU Xingzhou.
+% Copyright © 2024 DU Xingzhou.
 % Licence: Apache license 2.0.
 % 
 % Input:
-%  imgroi2_top - binarized top-view image with a resolution of 1400*900;
-%  img_grey_side - greyscale side-view image with a resolution of 1400*900;
-%  img_grey_side_ini - greyscale background side-view image with a resolution of 1400*900;
-%  len_x, len_y - consts showing the dimension (in millimeter) of top view in x and y directions, respectively;
-%  ROI_len - length of the dynamic ROI on top view in pixels;
-%  ROI_hei - height of the dynamic ROI on side view in pixels;
-%  xyROI_p, hvROI_p - dynamic ROI on top view and side view in last cycle;
-%  xyhv_cpre_mat - position of the swarm in previous cycles;
-%  Branch_p - branch map from last cycle;
-%  PosSwm_p - position of the swarm in last cycle;
-%  Region - region of exploration;
-%  Img_total_arr_p - exploration map from last cycle;
-%  ReconsData_p - data for reconstruction from last cycle;
-%  pix_inc_p - incremental region of the swarm in last cycle;
-%  num_frame - current number of image frames;
-%  frame_ct - counter for pause;
-%  mf_dir_p - yaw angle of the rotating magnetic field in last cycle. 
+%   imgroi2_top - binarized ROI image on top view with a resolution of 256*256, in which the value of each pixel is 0 or 255;
+%   img_grey_side - greyscale ROI image on side view with a resolution of 128*400, in which the value of each pixel is 0 to 255;
+%   img_grey_side_ini - greyscale background side-view image with a resolution of 128*400;
+%   len_x, len_y - consts showing the dimension of top view (in millimeter) in x and y directions, respectively;
+%   ROI_len - length of the dynamic ROI on top view in pixels;
+%   ROI_hei - height of the dynamic ROI on side view in pixels;
+%   xyROI_p - a 1*4 vector recording the dynamic ROI on top view in last cycle, in the format of [x_upperleft, y_upperleft, x_lowerright, y_lowerright], initialized as the region where the particles are injected;
+%   hvROI_p - a 1*4 vector recording the dynamic ROI on side view in last cycle, initialized as the region where the particles are injected;;
+%   xyhv_cpre_mat - a 20*4 matrix recording position of the swarm in previous 20 cycles in pixels;
+%   Branch_p - a n*7 matrix recording the branch map from last cycle, n dynamically changes during exploration;
+%   PosSwm_p - a 1*4 vector showing position of the swarm in last cycle, [x,y,z,type] in millimeter;
+%   Region - region of exploration, [x_upperleft, y_upperleft, x_lowerright, y_lowerright] in pixels;
+%   Img_total_arr_p - exploration map from last cycle, resolution of 1400*900;
+%   ReconsData_p - a n*6 matrix recording the data for reconstruction from last cycle;
+%   pix_inc_p - a 1*4 vector recording the incremental area in pixels of the swarm in last cycle;
+%   num_frame - current number of image frames;
+%   frame_ct - counter for pause;
+%   mf_dir_p - yaw angle of the rotating magnetic field in last cycle. 
 % 
 % Output:
-%  PosSwm - position of the swarm;
-%  xyhv_co_mat - positions of the swarm till current frame;
-%  xyROI, hvROI - dynamic ROI on top view and side view, respectively;
-%  Branch - updated branch map;
-%  Img_total_arr - updated exploration map;
-%  ReconsData - updated data for reconstruction;
-%  all_end - marker to complete exploration;
-%  pix_inc - incremental region of the swarm;
-%  frame_ct - updated counter for pause;
-%  mf_dir_p - updataed yaw angle of the rotating magnetic field; 
-%  dist_hvroi - moving direction of the ROI on side view.
+%   PosSwm - a 1*4 vector showing position of the swarm, [x,y,z,type] in millimeter;
+%   xyhv_co_mat - a 20*4 matrix recording positions of the swarm till current frame;
+%   xyROI, hvROI - dynamic ROI on top view and side view, respectively;
+%   Branch - a n*7 matrix recording the updated branch map;
+%   Img_total_arr - a 1400*900 matrix recording the updated exploration map;
+%   ReconsData - a n*6 matrix recording the updated data for reconstruction;
+%   all_end - marker to complete exploration;
+%   pix_inc - a 1*4 vector recording the incremental area in pixels of the swarm;
+%   frame_ct - updated counter for pause;
+%   mf_dir_p - updataed yaw angle of the rotating magnetic field; 
+%   dist_hvroi - moving direction of the ROI on side view.
 
 % clearvars -except imgroi2_top img_grey_side img_grey_side_ini len_x len_y ROI_len ROI_hei xyROI_p hvROI_p xyhv_cpre_mat Branch_p PosSwm_p Region Img_total_arr_p ReconsData_p pix_inc_p num_frame frame_ct mf_dir_p
 xy_cpre_mat = xyhv_cpre_mat(:,1:2);
