@@ -33,12 +33,12 @@ Output:
   all_end - marker to complete exploration;
   pix_inc - a 1*4 vector recording the incremental area in pixels of the swarm;
   frame_ct - updated counter for pause;
-  mf_dir_p - updataed yaw angle of the rotating magnetic field; 
+  mf_dir_p - updated yaw angle of the rotating magnetic field; 
   dist_hvroi - moving direction of the ROI on side view.
 
 Instructions:
 1. Write a loop in the main program of magnetic actuation system, and the loop should be parallel to the loops that controlling the magnetic actuation process; 
-2. Initialize the vaiables according to the list above;
+2. Initialize the variables according to the list above;
 3. Acquire image frames from top-view camera and side-view camera, and both images are in the resolution of 1400*900;
 4. Initialize the background side-view image as the first side-view image acquired;
 5. Set the loop to execute every N frames, where N can be adjusted according to the demanded rate for image processing and decision-making;
