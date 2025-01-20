@@ -1,0 +1,9 @@
+cff-version: 1.0
+message: "If you use this algorithm, please cite it as below."
+authors:
+- family-names: Du
+  given-names: Xingzhou
+orcid: https://orcid.org/0000-0002-8526-7286
+title: Active Exploration and Reconstruction of Vascular Networks Using Microrobot Swarms
+version: v1.0
+date-released: 2025-01-20
